@@ -1,6 +1,5 @@
 package com.josehuerta.myfancypdfinvoices.services;
 
-import com.josehuerta.myfancypdfinvoices.context.Application;
 import com.josehuerta.myfancypdfinvoices.model.Invoice;
 import com.josehuerta.myfancypdfinvoices.model.User;
 
