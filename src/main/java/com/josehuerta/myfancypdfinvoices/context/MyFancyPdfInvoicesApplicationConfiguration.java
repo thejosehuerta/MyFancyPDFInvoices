@@ -4,8 +4,10 @@ package com.josehuerta.myfancypdfinvoices.context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.josehuerta.myfancypdfinvoices.services.InvoiceService;
 import com.josehuerta.myfancypdfinvoices.services.UserService;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class MyFancyPdfInvoicesApplicationConfiguration {
@@ -16,6 +18,7 @@ public class MyFancyPdfInvoicesApplicationConfiguration {
     */
 
     @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE) // Add @Scope to return a new UserService everytime we call it
     public UserService userService() {
         return new UserService();
     }

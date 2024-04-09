@@ -22,7 +22,7 @@ public class InvoiceService {
     public Invoice create(String userId, Integer amount) {
         // User validation check
         User user = userService.findById(userId);
-        if(user == null) {
+        if (user == null) {
             throw new IllegalStateException();
         }
 
