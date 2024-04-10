@@ -2,14 +2,15 @@ package com.josehuerta.myfancypdfinvoices.context;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.josehuerta.myfancypdfinvoices.ApplicationLauncher;
 import com.josehuerta.myfancypdfinvoices.services.InvoiceService;
 import com.josehuerta.myfancypdfinvoices.services.UserService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 
 @Configuration
+@ComponentScan(basePackageClasses = ApplicationLauncher.class) // Scan all packages by pointing to root package
+@PropertySource("classpath:/application.properties") // Read in application.properties
 public class MyFancyPdfInvoicesApplicationConfiguration {
 
     /*
@@ -17,18 +18,16 @@ public class MyFancyPdfInvoicesApplicationConfiguration {
     create one instance of each @Bean annotated class.
     */
 
-    @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE) // Add @Scope to return a new UserService everytime we call it
     public UserService userService() {
         return new UserService();
     }
 
-    @Bean
-    public InvoiceService invoiceService(UserService userService) {
-        return new InvoiceService(userService);
+    public InvoiceService invoiceService(UserService userService, String cdnUrl) {
+        return new InvoiceService(userService, cdnUrl);
     }
 
-    @Bean
+    @Bean // Keep @Bean annotation because Jackson is a 3rd party library
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }

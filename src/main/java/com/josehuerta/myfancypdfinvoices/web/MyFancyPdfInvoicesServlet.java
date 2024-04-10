@@ -29,6 +29,13 @@ public class MyFancyPdfInvoicesServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(MyFancyPdfInvoicesApplicationConfiguration.class);
+
+        /*
+         whenever your JVM is about to stop, Spring properly shuts down its applicationContext
+         first and also calls the @PreDestroy methods of all registered @Beans.
+         */
+        ctx.registerShutdownHook();
+
         // Spring reads in our @Configuration class and constructs our beans.
         this.userService = ctx.getBean(UserService.class);
         this.objectMapper = ctx.getBean(ObjectMapper.class);
