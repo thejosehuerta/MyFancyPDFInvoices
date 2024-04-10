@@ -7,10 +7,12 @@ import com.josehuerta.myfancypdfinvoices.services.InvoiceService;
 import com.josehuerta.myfancypdfinvoices.services.UserService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @ComponentScan(basePackageClasses = ApplicationLauncher.class) // Scan all packages by pointing to root package
 @PropertySource("classpath:/application.properties") // Read in application.properties
+@EnableWebMvc // Automatically enable JSON <-> Java object conversions
 public class MyFancyPdfInvoicesApplicationConfiguration {
 
     /*

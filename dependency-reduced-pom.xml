@@ -11,6 +11,17 @@
         <version>3.11.0</version>
       </plugin>
       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>com.josehuerta.myfancypdfinvoices.ApplicationLauncher</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.4.1</version>
         <executions>

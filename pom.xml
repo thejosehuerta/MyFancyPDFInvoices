@@ -45,18 +45,18 @@
                 <version>3.11.0</version>
             </plugin>
             <!--This plugin is for adding a manifest file to let Java know which class to run.-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-jar-plugin</artifactId>-->
-<!--                <version>3.3.0</version>-->
-<!--                <configuration>-->
-<!--                    <archive>-->
-<!--                        <manifest>-->
-<!--                            <mainClass>com.josehuerta.myfancypdfinvoices.ApplicationLauncher</mainClass>-->
-<!--                        </manifest>-->
-<!--                    </archive>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.josehuerta.myfancypdfinvoices.ApplicationLauncher</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <!--This plugin is for adding the necessary external libraries when packaging the jar file.-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

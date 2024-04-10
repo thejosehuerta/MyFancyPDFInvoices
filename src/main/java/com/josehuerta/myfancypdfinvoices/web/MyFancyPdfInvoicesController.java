@@ -1,0 +1,39 @@
+package com.josehuerta.myfancypdfinvoices.web;
+
+import com.josehuerta.myfancypdfinvoices.dto.InvoiceDto;
+import com.josehuerta.myfancypdfinvoices.model.Invoice;
+import com.josehuerta.myfancypdfinvoices.services.InvoiceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+
+/* This annotation is so @ComponentScan can find it and also let SpringMVC knows that this
+class can accept HTTP requests */
+//@Controller
+
+@RestController // Short for @Controller and @ResponseBody
+public class MyFancyPdfInvoicesController {
+
+    private final InvoiceService invoiceService;
+
+    // Constructor injecting the InvoiceService
+    public MyFancyPdfInvoicesController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
+    }
+
+    @GetMapping("/invoices")
+    // Shorthand for @GetMapping -> @RequestMapping(value = "/invoices", method = RequestMethod.GET)
+    public List<Invoice> invoices() {
+        return invoiceService.findAll();
+    }
+
+    @PostMapping("/invoices/")
+    public Invoice createInvoice(@RequestBody InvoiceDto invoiceDto) {
+        return invoiceService.create(invoiceDto.getUserId(), invoiceDto.getAmount());
+    }
+
+
+}

@@ -1,13 +1,11 @@
 package com.josehuerta.myfancypdfinvoices;
 
 import com.josehuerta.myfancypdfinvoices.context.MyFancyPdfInvoicesApplicationConfiguration;
-import com.josehuerta.myfancypdfinvoices.web.MyFancyPdfInvoicesServlet;
 import jakarta.servlet.ServletContext;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
-import org.springframework.cglib.proxy.Dispatcher;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
