@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan(basePackageClasses = ApplicationLauncher.class) // Scan all packages by pointing to root package
 @PropertySource("classpath:/application.properties") // Read in application.properties
 @EnableWebMvc // Automatically enable JSON <-> Java object conversions
-public class MyFancyPdfInvoicesApplicationConfiguration {
+public class ApplicationConfiguration {
 
     /*
     Beans tell Spring that on ApplicationContext startup, it should
