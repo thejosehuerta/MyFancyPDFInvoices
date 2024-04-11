@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -34,6 +35,7 @@ public class InvoiceService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Transactional
     public List<Invoice> findAll() {
         // The row mapper lets us return every returned SQL row into a Java object
         return jdbcTemplate.query("select id, user_id, pdf_url, amount from invoices", (resultSet, rowNum) -> {
@@ -47,6 +49,7 @@ public class InvoiceService {
         });
     }
 
+    @Transactional
     public Invoice create(String userId, Integer amount) {
         // Dummy URL
         String generatedPdfUrl = cdnUrl + "/images/default/sample.pdf";

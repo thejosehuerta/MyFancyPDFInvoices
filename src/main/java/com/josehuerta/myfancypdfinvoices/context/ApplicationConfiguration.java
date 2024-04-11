@@ -9,6 +9,9 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -21,6 +24,7 @@ import javax.sql.DataSource;
 @ComponentScan(basePackageClasses = ApplicationLauncher.class) // Scan all packages by pointing to root package
 @PropertySource("classpath:/application.properties") // Read in application.properties
 @EnableWebMvc // Automatically enable JSON <-> Java object conversions
+@EnableTransactionManagement
 public class ApplicationConfiguration {
 
 //    @Bean
@@ -40,6 +44,12 @@ public class ApplicationConfiguration {
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
+    }
+
+    // TransactionManager actually lets us open up abd commit transactions to our database
+    @Bean
+    public TransactionManager platformTransactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 
     /*
