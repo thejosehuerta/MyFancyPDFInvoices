@@ -6,43 +6,78 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.UUID;
 
 @Component
 public class InvoiceService {
 
-    List<Invoice> invoices = new CopyOnWriteArrayList<>();
-
-    // Field injection
-    //@Autowired // With this annotation, Spring will construct the UserService for us and inject the dependencies
+    private final JdbcTemplate jdbcTemplate;
 
     // We will use constructor injection
     private final UserService userService;
 
     private final String cdnUrl;
 
-    public InvoiceService(UserService userService, @Value("${cdn.url}") String cdnUrl) {
+    // Field injection
+    //@Autowired // With this annotation, Spring will construct the UserService for us and inject the dependencies
+    public InvoiceService(UserService userService, JdbcTemplate jdbcTemplate, @Value("${cdn.url}") String cdnUrl) {
         this.userService = userService;
         this.cdnUrl = cdnUrl;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Invoice> findAll() {
-        return invoices;
+        // The row mapper lets us return every returned SQL row into a Java object
+        return jdbcTemplate.query("select id, user_id, pdf_url, amount from invoices", (resultSet, rowNum) -> {
+            Invoice invoice = new Invoice();
+            invoice.setId(resultSet.getObject("id").toString());
+            invoice.setPdfUrl(resultSet.getString("pdf_url"));
+            invoice.setUserId(resultSet.getString("user_id"));
+            invoice.setAmount(resultSet.getInt("amount"));
+            return invoice;
+
+        });
     }
 
     public Invoice create(String userId, Integer amount) {
-        // User validation check
-        User user = userService.findById(userId);
-        if (user == null) {
-            throw new IllegalStateException();
-        }
+        // Dummy URL
+        String generatedPdfUrl = cdnUrl + "/images/default/sample.pdf";
 
-        // TODO real pdf creation and storing on network service
-        Invoice invoice = new Invoice(userId, amount, cdnUrl + "/images/default/sample.pdf");
-        invoices.add(invoice);
+        /*
+        In order to return generated primary keys, create a preparedStatement with the RETURN_GENERATED_KEYS set to true.
+        After this, the JDBC driver can make the generated ids available via the keyHolder object.
+        */
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement("insert into invoices (user_id, pdf_url, amount) values (?, ?, ?)",
+                            Statement.RETURN_GENERATED_KEYS);
+            // Set parameters on the preparedStatement (will replace the ?'s in the SQL)
+            ps.setString(1, userId);
+            ps.setString(2, generatedPdfUrl);
+            ps.setInt(3, amount);
+            return ps;
+        }, keyHolder);
+
+        // Return the auto-generated UUID PK from database.
+        String uuid = !keyHolder.getKeys().isEmpty() ? ((UUID) keyHolder.getKeys().values().iterator().next()).toString()
+                : null;
+
+        // Create new Invoice object
+        Invoice invoice = new Invoice();
+        invoice.setId(uuid);
+        invoice.setPdfUrl(generatedPdfUrl);
+        invoice.setAmount(amount);
+        invoice.setUserId(userId);
         return invoice;
     }
 
